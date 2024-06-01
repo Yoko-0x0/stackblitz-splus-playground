@@ -1,59 +1,280 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "cli": {
-    "analytics": "1e1de97b-a744-405a-8b5a-0397bb3d01ce"
-  },
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "demo": {
+    "SaludPlusCliente": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "es": {
+            "translation": "src/locale/messages.es.xlf",
+            "baseHref": "/"
+          }
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/SaludPlusCliente",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/manifest.webmanifest",
+              "src/web.config",
+              "src/web.config.docker"
+            ],
+            "styles": [
+              {
+                "input": "node_modules/@progress/kendo-theme-default/dist/all.css"
+              },
+              "src/styles.scss",    
+              "dist/saludplus/forms/saludplus.forms.theme.scss",        
+              "src/assets/SaludPlusTheme.css",
+              {
+                "inject": false,
+                "input": "src/styles/kendoui-theme-dark.scss",
+                "bundleName": "kendoui-dark"
+              },
+              {
+                "inject": false,
+                "input": "src/styles/kendoui-theme-light.scss",
+                "bundleName": "kendoui-light"
+              }
+            ],
+            
+
+            "scripts": [],
+            "allowedCommonJsDependencies": ["file-saver"],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": false,
+            "optimization": false,
+            "namedChunks": true
+          },
           "configurations": {
-            "development": {
-              "extractLicenses": false,
-              "namedChunks": true,
-              "optimization": false,
-              "sourceMap": true
+            "es": {
+              "localize": ["es"]
             },
             "production": {
-              "aot": true,
-              "extractLicenses": true,
-              "namedChunks": false,
+              "localize": ["es"],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "aot": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "600kb",
+                  "maximumError": "1000kb"
+                }
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ],
+              "aot": true,
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "600kb",
+                  "maximumError": "1000kb"
+                }
+              ]
+            },
+            "qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.qa.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "600kb",
+                  "maximumError": "1000kb"
+                }
+              ]
             }
           },
-          "options": {
-            "assets": [],
-            "index": "src/index.html",
-            "browser": "src/main.ts",
-            "outputPath": "dist/demo",
-            "scripts": [],
-            "styles": ["src/global_styles.css"],
-            "tsConfig": "tsconfig.app.json"
-          }
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "SaludPlusCliente:build"
+          },
           "configurations": {
-            "development": {
-              "buildTarget": "demo:build:development"
+            "es": {
+              "browserTarget": "SaludPlusCliente:build:es"
             },
             "production": {
-              "buildTarget": "demo:build:production"
+              "browserTarget": "SaludPlusCliente:build:production"
+            },
+            "dev": {
+              "browserTarget": "SaludPlusCliente:build:dev"
+            },
+            "qa": {
+              "browserTarget": "SaludPlusCliente:build:qa"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "SaludPlusCliente:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              {
+                "input": "node_modules/@progress/kendo-theme-default/dist/all.css"
+              },
+              "src/styles.scss", 
+              "./node_modules/@saludplus/forms/saludplus.forms.theme.scss", 
+              "src/assets/SaludPlusTheme.css",                            
+              {
+                "inject": false,
+                "input": "src/styles/sisgarbe-kendoui-theme-dark.scss",
+                "bundleName": "kendoui-dark"
+              },
+              {
+                "inject": false,
+                "input": "src/styles/sisgarbe-kendoui-theme-light.scss",
+                "bundleName": "kendoui-light"
+              }
+            ],
+            "scripts": []
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "SaludPlusCliente:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "SaludPlusCliente:serve:production"
+            },
+            "dev": {
+              "devServerTarget": "SaludPlusCliente:serve:dev"
+            },
+            "qa": {
+              "devServerTarget": "SaludPlusCliente:serve:dev"
+            }
+          }
+        }
+      }
+    },
+    "@saludplus/forms": {
+      "projectType": "library",
+      "root": "projects/saludplus/forms",
+      "sourceRoot": "projects/saludplus/forms/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/saludplus/forms/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/saludplus/forms/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/saludplus/forms/tsconfig.lib.json"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/saludplus/forms/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
         }
-      },
-      "prefix": "app",
-      "projectType": "application",
-      "root": "",
-      "schematics": {},
-      "sourceRoot": "src"
+      }
     }
   },
-  "version": 1
+  "cli": {
+    "analytics": "b35964a4-dba9-4b02-a75c-bac6593dcb5d"
+  }
 }
